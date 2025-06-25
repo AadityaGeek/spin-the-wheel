@@ -12,13 +12,10 @@ const closeModalBtn = document.getElementById('closeModalBtn');
 // Initial options for the wheel, now with a 'weight' property
 let options = [
     { text: "Spin Again", weight: 1 },
-    { text: "Free Coffee", weight: 1 },
-    { text: "20% Off", weight: 1 },
     { text: "Next Time", weight: 1 },
     { text: "Big Prize!", weight: 1 },
     { text: "Small Gift", weight: 1 },
-    { text: "Good Luck", weight: 1 },
-    { text: "Try Harder", weight: 1 }
+    { text: "Good Luck", weight: 1 }
 ];
 // currentRotationAngle tracks the wheel's actual rotation for drawing
 let currentRotationAngle = 0; // in radians
