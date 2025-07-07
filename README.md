@@ -13,14 +13,14 @@ A dynamic, customizable spin wheel web app for raffles, giveaways, classroom act
 
 ## Demo
 
-![Spin the Wheel Screenshot](projects/spin-the-wheel.png)
+![Spin the Wheel Screenshot](spin-the-wheel.png)
 
 ## Getting Started
 
 ### 1. Clone or Download
 
 ```bash
-git clone https://github.com/yourusername/spin-the-wheel.git
+git clone https://github.com/AadityaGeek/spin-the-wheel.git
 cd spin-the-wheel
 ```
 
@@ -55,11 +55,15 @@ Just open `index.html` in your favorite browser. No build step required.
   Modify `style.css` or extend Tailwind classes in `index.html` for further customization.
 
 ## File Structure
-.
+
+```bash
+spin-the-wheel/
 ├── index.html # Main HTML file
 ├── style.css # Custom styles
 ├── script.js # Wheel logic and interactivity
-└── README.md # Project documentation
+├── README.md # Project documentation
+└── spin-the-wheel.png # Demo screenshot
+```
 
 ## Accessibility & Responsiveness
 
