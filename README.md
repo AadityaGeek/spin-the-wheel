@@ -13,8 +13,7 @@ A dynamic, customizable spin wheel web app for raffles, giveaways, classroom act
 
 ## Demo
 
-![Spin the Wheel Screenshot](screenshot.png)  
-*Add a screenshot of your app here!*
+![Spin the Wheel Screenshot](projects/spin-the-wheel.png)
 
 ## Getting Started
 
