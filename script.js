@@ -171,20 +171,67 @@ function drawWheel() {
   options.forEach((option, index) => {
     const listItem = document.createElement("li");
     let probability =
-      totalWeight > 0 ? ((option.weight / totalWeight) * 100).toFixed(1) : 0; // Calculate probability
-    listItem.className = "flex justify-between items-center py-1";
+      totalWeight > 0 ? ((option.weight / totalWeight) * 100).toFixed(1) : 0;
+    listItem.className = "flex justify-between items-center py-1 gap-2";
 
-    // Create a span to display text and probability, which will become editable
-    const displaySpan = document.createElement("span");
-    displaySpan.className =
-      "text-gray-700 cursor-pointer hover:underline editable-option-display";
-    displaySpan.dataset.index = index; // Store index for editing
-    displaySpan.textContent = `${option.text} (${probability}%)`;
+    // --- Editable Text ---
+    const textSpan = document.createElement("span");
+    textSpan.className =
+      "text-gray-700 cursor-pointer hover:underline editable-option-text";
+    textSpan.dataset.index = index;
+    textSpan.textContent = option.text;
 
-    // Add click listener to make it editable
-    displaySpan.addEventListener("click", (event) => {
+    textSpan.addEventListener("click", (event) => {
+      if (isEditing) return;
       isEditing = true;
+      const idx = parseInt(event.target.dataset.index);
+      const currentText = options[idx].text;
 
+      const inputField = document.createElement("input");
+      inputField.type = "text";
+      inputField.className = "editable-text-input";
+      inputField.value = currentText;
+      inputField.maxLength = 32;
+
+      const parent = event.target.parentNode;
+      parent.replaceChild(inputField, event.target);
+      inputField.focus();
+
+      const saveText = () => {
+        let newText = inputField.value.trim();
+        if (!newText) {
+          showMessageModal(
+            "Invalid Text",
+            "Option text cannot be empty.",
+            true
+          );
+          newText = currentText;
+        }
+        options[idx].text = newText;
+        isEditing = false;
+        drawWheel();
+      };
+
+      inputField.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") saveText();
+      });
+      inputField.addEventListener("blur", () => {
+        setTimeout(() => {
+          if (document.activeElement !== inputField) saveText();
+        }, 100);
+      });
+    });
+
+    // --- Editable Weight ---
+    const weightSpan = document.createElement("span");
+    weightSpan.className =
+      "ml-2 text-gray-500 cursor-pointer hover:underline editable-option-weight";
+    weightSpan.dataset.index = index;
+    weightSpan.textContent = `(${probability}%)`;
+
+    weightSpan.addEventListener("click", (event) => {
+      if (isEditing) return;
+      isEditing = true;
       const idx = parseInt(event.target.dataset.index);
       const currentWeight = options[idx].weight;
 
@@ -194,12 +241,13 @@ function drawWheel() {
       inputField.value = currentWeight;
       inputField.min = "0";
       inputField.step = "0.1";
+      inputField.style.width = "60px";
 
       const parent = event.target.parentNode;
       parent.replaceChild(inputField, event.target);
       inputField.focus();
 
-      const saveChanges = () => {
+      const saveWeight = () => {
         let newWeight = parseFloat(inputField.value);
         if (isNaN(newWeight) || newWeight < 0) {
           showMessageModal(
@@ -215,32 +263,25 @@ function drawWheel() {
       };
 
       inputField.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") {
-          saveChanges();
-        }
+        if (e.key === "Enter") saveWeight();
       });
-
       inputField.addEventListener("blur", () => {
         setTimeout(() => {
-          if (document.activeElement !== inputField) {
-            saveChanges();
-          }
-        }, 100); // Give mobile time to stabilize focus
+          if (document.activeElement !== inputField) saveWeight();
+        }, 100);
       });
     });
 
-    listItem.appendChild(displaySpan); // Add the editable span to the list item
-
-    // Add remove button
+    // --- Remove Button ---
     const removeButton = document.createElement("button");
     removeButton.className =
       "remove-option-btn text-gray-400 hover:text-red-500 transition-colors duration-200";
     removeButton.dataset.index = index;
     removeButton.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm3 3a1 1 0 011-1h1a1 1 0 110 2h-1a1 1 0 01-1-1zm-1 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
-            </svg>
-        `;
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm3 3a1 1 0 011-1h1a1 1 0 110 2h-1a1 1 0 01-1-1zm-1 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
+      </svg>
+  `;
     removeButton.addEventListener("click", (event) => {
       const idxToRemove = parseInt(event.currentTarget.dataset.index);
       if (
@@ -252,7 +293,16 @@ function drawWheel() {
         drawWheel();
       }
     });
-    listItem.appendChild(removeButton); // Add the remove button to the list item
+
+    // --- Assemble List Item ---
+    // Use a flex row for text and weight, so they don't overlap
+    const textWeightWrapper = document.createElement("span");
+    textWeightWrapper.className = "flex flex-row items-center gap-1";
+    textWeightWrapper.appendChild(textSpan);
+    textWeightWrapper.appendChild(weightSpan);
+
+    listItem.appendChild(textWeightWrapper);
+    listItem.appendChild(removeButton);
 
     optionList.appendChild(listItem);
   });
