@@ -104,10 +104,17 @@ canvas {
   vertical-align: middle;
 }
 
+.editable-text-input:focus,
+.editable-weight-input:focus {
+  outline: 2px solid #6366f1;
+  outline-offset: 1px;
+}
+
 /* Prevent list from horizontal overflow */
 #optionList {
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: auto;
   max-height: 200px; /* Adjust as needed */
   padding-right: 4px;
+  white-space: nowrap;
 }

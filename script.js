@@ -168,6 +168,7 @@ function drawWheel() {
   );
 
   // Populate options list with remove buttons and editable probability
+  optionList.innerHTML = ""; // Clear before repopulating
   options.forEach((option, index) => {
     const listItem = document.createElement("li");
     let probability =
@@ -198,7 +199,7 @@ function drawWheel() {
       inputField.focus();
 
       const saveText = () => {
-        let newText = inputField.value.trim();
+        let newText = inputField.value.trim().slice(0, 32);
         if (!newText) {
           showMessageModal(
             "Invalid Text",
@@ -277,6 +278,7 @@ function drawWheel() {
     removeButton.className =
       "remove-option-btn text-gray-400 hover:text-red-500 transition-colors duration-200";
     removeButton.dataset.index = index;
+    removeButton.setAttribute("aria-label", "Remove option");
     removeButton.innerHTML = `
       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
           <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm3 3a1 1 0 011-1h1a1 1 0 110 2h-1a1 1 0 01-1-1zm-1 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" clip-rule="evenodd" />
@@ -295,7 +297,6 @@ function drawWheel() {
     });
 
     // --- Assemble List Item ---
-    // Use a flex row for text and weight, so they don't overlap
     const textWeightWrapper = document.createElement("span");
     textWeightWrapper.className = "flex flex-row items-center gap-1";
     textWeightWrapper.appendChild(textSpan);
