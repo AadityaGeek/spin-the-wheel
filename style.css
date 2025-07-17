@@ -92,14 +92,15 @@ canvas {
 /* Limit the width of the editable text input and keep it inline */
 .editable-text-input {
   max-width: 120px;
-  width: 100%;
   min-width: 40px;
+  width: auto;
   font-size: 1rem;
   padding: 2px 6px;
   box-sizing: border-box;
   border: 1px solid #cbd5e1;
   border-radius: 4px;
   margin-right: 4px;
+  margin-left: 3px; /* <-- Add this line */
   display: inline-block;
   vertical-align: middle;
 }
@@ -116,5 +117,12 @@ canvas {
   overflow-y: auto;
   max-height: 200px; /* Adjust as needed */
   padding-right: 4px;
-  white-space: nowrap;
+}
+
+/* Optionally, ensure list items align properly */
+#optionList li {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }

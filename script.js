@@ -175,100 +175,100 @@ function drawWheel() {
       totalWeight > 0 ? ((option.weight / totalWeight) * 100).toFixed(1) : 0;
     listItem.className = "flex justify-between items-center py-1 gap-2";
 
-    // --- Editable Text ---
+    // --- Display Mode Elements ---
     const textSpan = document.createElement("span");
-    textSpan.className =
-      "text-gray-700 cursor-pointer hover:underline editable-option-text";
-    textSpan.dataset.index = index;
+    textSpan.className = "text-gray-700 editable-option-text";
     textSpan.textContent = option.text;
 
-    textSpan.addEventListener("click", (event) => {
+    const weightSpan = document.createElement("span");
+    weightSpan.className = "ml-2 text-gray-500 editable-option-weight";
+    weightSpan.textContent = `(${probability}%)`;
+
+    // --- Assemble Text and Weight ---
+    const textWeightWrapper = document.createElement("span");
+    textWeightWrapper.className = "flex flex-row items-center gap-1";
+    textWeightWrapper.appendChild(textSpan);
+    textWeightWrapper.appendChild(weightSpan);
+
+    // --- Edit Button (improved pencil icon) ---
+    const editBtn = document.createElement("button");
+    editBtn.className =
+      "ml-1 text-gray-400 hover:text-indigo-600 p-1 rounded edit-both-btn";
+    editBtn.setAttribute("aria-label", "Edit option");
+    editBtn.innerHTML = `
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="M16.862 3.487a2.25 2.25 0 113.182 3.182L7.5 19.213l-4 1 1-4 12.362-12.726z"/>
+      </svg>
+    `;
+
+    editBtn.addEventListener("click", () => {
       if (isEditing) return;
       isEditing = true;
-      const idx = parseInt(event.target.dataset.index);
-      const currentText = options[idx].text;
 
-      const inputField = document.createElement("input");
-      inputField.type = "text";
-      inputField.className = "editable-text-input";
-      inputField.value = currentText;
-      inputField.maxLength = 32;
+      // Create input fields for both text and weight
+      const textInput = document.createElement("input");
+      textInput.type = "text";
+      textInput.className = "editable-text-input";
+      textInput.value = option.text;
+      textInput.maxLength = 32;
 
-      const parent = event.target.parentNode;
-      parent.replaceChild(inputField, event.target);
-      inputField.focus();
+      const weightInput = document.createElement("input");
+      weightInput.type = "number";
+      weightInput.className = "editable-weight-input";
+      weightInput.value = option.weight;
+      weightInput.min = "0";
+      weightInput.step = "0.1";
+      weightInput.style.width = "60px";
 
-      const saveText = () => {
-        let newText = inputField.value.trim().slice(0, 32);
+      // Replace spans with inputs
+      textWeightWrapper.replaceChild(textInput, textSpan);
+      textWeightWrapper.replaceChild(weightInput, weightSpan);
+      editBtn.style.display = "none";
+      textInput.focus();
+
+      // Save handler for both fields
+      const save = () => {
+        let newText = textInput.value.trim().slice(0, 32);
+        let newWeight = parseFloat(weightInput.value);
+
         if (!newText) {
           showMessageModal(
             "Invalid Text",
             "Option text cannot be empty.",
             true
           );
-          newText = currentText;
+          newText = option.text;
         }
-        options[idx].text = newText;
-        isEditing = false;
-        drawWheel();
-      };
-
-      inputField.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") saveText();
-      });
-      inputField.addEventListener("blur", () => {
-        setTimeout(() => {
-          if (document.activeElement !== inputField) saveText();
-        }, 100);
-      });
-    });
-
-    // --- Editable Weight ---
-    const weightSpan = document.createElement("span");
-    weightSpan.className =
-      "ml-2 text-gray-500 cursor-pointer hover:underline editable-option-weight";
-    weightSpan.dataset.index = index;
-    weightSpan.textContent = `(${probability}%)`;
-
-    weightSpan.addEventListener("click", (event) => {
-      if (isEditing) return;
-      isEditing = true;
-      const idx = parseInt(event.target.dataset.index);
-      const currentWeight = options[idx].weight;
-
-      const inputField = document.createElement("input");
-      inputField.type = "number";
-      inputField.className = "editable-weight-input";
-      inputField.value = currentWeight;
-      inputField.min = "0";
-      inputField.step = "0.1";
-      inputField.style.width = "60px";
-
-      const parent = event.target.parentNode;
-      parent.replaceChild(inputField, event.target);
-      inputField.focus();
-
-      const saveWeight = () => {
-        let newWeight = parseFloat(inputField.value);
         if (isNaN(newWeight) || newWeight < 0) {
           showMessageModal(
             "Invalid Weight",
             "Please enter a non-negative number for the weight.",
             true
           );
-          newWeight = currentWeight;
+          newWeight = option.weight;
         }
-        options[idx].weight = newWeight;
+        option.text = newText;
+        option.weight = newWeight;
         isEditing = false;
         drawWheel();
       };
 
-      inputField.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") saveWeight();
+      // Save on Enter or blur for both inputs
+      textInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") save();
       });
-      inputField.addEventListener("blur", () => {
+      weightInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") save();
+      });
+      textInput.addEventListener("blur", () => {
         setTimeout(() => {
-          if (document.activeElement !== inputField) saveWeight();
+          if (document.activeElement !== weightInput) save();
+        }, 100);
+      });
+      weightInput.addEventListener("blur", () => {
+        setTimeout(() => {
+          if (document.activeElement !== textInput) save();
         }, 100);
       });
     });
@@ -296,14 +296,15 @@ function drawWheel() {
       }
     });
 
-    // --- Assemble List Item ---
-    const textWeightWrapper = document.createElement("span");
-    textWeightWrapper.className = "flex flex-row items-center gap-1";
-    textWeightWrapper.appendChild(textSpan);
-    textWeightWrapper.appendChild(weightSpan);
+    // --- Right-aligned Icon Wrapper ---
+    const iconWrapper = document.createElement("span");
+    iconWrapper.className = "flex flex-row gap-1 ml-auto";
+    iconWrapper.appendChild(editBtn);
+    iconWrapper.appendChild(removeButton);
 
+    // --- Assemble List Item ---
     listItem.appendChild(textWeightWrapper);
-    listItem.appendChild(removeButton);
+    listItem.appendChild(iconWrapper);
 
     optionList.appendChild(listItem);
   });
