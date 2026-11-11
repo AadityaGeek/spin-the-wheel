@@ -1,128 +1,128 @@
+/* Custom styles for Spin the Wheel */
+
 body {
-  font-family: "Inter", sans-serif;
-  background-color: #f0f2f5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0;
-}
-canvas {
-  border: 4px solid #4a5568;
-  border-radius: 9999px; /* Make canvas rounded */
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-  touch-action: none; /* Disable default touch actions */
-  max-width: 90vw; /* Ensure responsiveness */
-  max-height: 90vh; /* Ensure responsiveness */
-  display: block;
-  margin: 0 auto;
-}
-.pointer {
-  width: 0;
-  height: 0;
-  border-left: 20px solid transparent;
-  border-right: 20px solid transparent;
-  border-top: 40px solid #ef4444; /* Triangle now points downwards */
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translate(-50%, 0); /* perfectly center the tip above */
-  z-index: 10;
+  min-height: 100vh;
 }
 
+/* Button & Accent Gradients */
 .button-gradient {
-  background-image: linear-gradient(to right, #6366f1, #8b5cf6);
-}
-.button-gradient:hover {
-  background-image: linear-gradient(to right, #4f46e5, #7c3aed);
+  background-image: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%);
+  background-size: 200% 200%;
+  transition: all 0.25s ease;
 }
 
-/* Modal specific styles */
-.modal {
-  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-  opacity: 0;
-  transform: translateY(-20px);
-  pointer-events: none; /* Allow clicks through when hidden */
+.button-gradient:hover:not(:disabled) {
+  background-position: right center;
+  box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4), 0 8px 10px -6px rgba(99, 102, 241, 0.3);
 }
-.modal.show {
+
+.button-gradient:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Wheel Container & Canvas */
+.wheel-container {
+  width: 100%;
+  max-width: 440px;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  filter: drop-shadow(0 20px 25px rgba(15, 23, 42, 0.15)) drop-shadow(0 8px 10px rgba(15, 23, 42, 0.1));
+}
+
+#wheelCanvas {
+  touch-action: none;
+  display: block;
+}
+
+/* Pointer Ticker Pin */
+.pointer-wrapper {
+  transform-origin: top center;
+  will-change: transform;
+}
+
+.pointer-wrapper.tick {
+  animation: pointerWiggle 0.12s ease-in-out;
+}
+
+@keyframes pointerWiggle {
+  0% {
+    transform: translateX(-50%) rotate(0deg);
+  }
+  25% {
+    transform: translateX(-50%) rotate(16deg);
+  }
+  60% {
+    transform: translateX(-50%) rotate(-4deg);
+  }
+  100% {
+    transform: translateX(-50%) rotate(0deg);
+  }
+}
+
+/* Collapsible Section Details/Summary */
+.collapsible-section summary {
+  list-style: none;
+}
+
+.collapsible-section summary::-webkit-details-marker {
+  display: none;
+}
+
+.summary-chevron {
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.collapsible-section[open] .summary-chevron {
+  transform: rotate(180deg);
+}
+
+.collapsible-section[open] summary {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* Custom Scrollbar for Options List */
+#optionList::-webkit-scrollbar {
+  width: 5px;
+}
+
+#optionList::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+#optionList::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+#optionList::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Modal Backdrop & Animation */
+.modal-backdrop {
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 0.25s ease;
+}
+
+.modal-backdrop.show {
   opacity: 1;
-  transform: translateY(0);
   pointer-events: auto;
 }
 
-/* Styles for the details/summary (collapsible) section */
-.collapsible-section summary {
-  cursor: pointer;
-  padding: 1rem;
-  background-color: #e0e7ff; /* Light indigo */
-  border-radius: 0.5rem;
-  font-weight: 600;
-  color: #4338ca; /* Darker indigo */
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: background-color 0.2s ease-in-out;
-}
-.collapsible-section summary:hover {
-  background-color: #c7d2fe;
-}
-.collapsible-section summary::-webkit-details-marker {
-  display: none; /* Hide default arrow */
-}
-.collapsible-section summary::after {
-  content: "+";
-  font-size: 1.5rem;
-  transition: transform 0.2s ease-in-out;
-}
-.collapsible-section[open] summary::after {
-  content: "-";
-  transform: rotate(0deg); /* No rotation needed for '-' */
+.modal-backdrop.show #modalCard {
+  transform: scale(1);
 }
 
-/* Styles for the editable weight input */
-.editable-weight-input {
-  width: 60px; /* Adjust as needed */
-  padding: 2px 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 0.875rem; /* text-sm equivalent */
-  text-align: center;
+#modalCard {
+  will-change: transform;
 }
 
-/* Limit the width of the editable text input and keep it inline */
-.editable-text-input {
-  max-width: 120px;
-  min-width: 40px;
-  width: auto;
-  font-size: 1rem;
-  padding: 2px 6px;
-  box-sizing: border-box;
-  border: 1px solid #cbd5e1;
-  border-radius: 4px;
-  margin-right: 4px;
-  margin-left: 3px; /* <-- Add this line */
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.editable-text-input:focus,
-.editable-weight-input:focus {
-  outline: 2px solid #6366f1;
-  outline-offset: 1px;
-}
-
-/* Prevent list from horizontal overflow */
-#optionList {
-  overflow-x: hidden;
-  overflow-y: auto;
-  max-height: 200px; /* Adjust as needed */
-  padding-right: 4px;
-}
-
-/* Optionally, ensure list items align properly */
-#optionList li {
-  align-items: center;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+/* Responsive tweaks */
+@media (max-width: 640px) {
+  .wheel-container {
+    max-width: 320px;
+  }
 }

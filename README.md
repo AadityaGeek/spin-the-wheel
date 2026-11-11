@@ -4,12 +4,16 @@ A dynamic, customizable spin wheel web app for raffles, giveaways, classroom act
 
 ## Features
 
-- 🎨 **Interactive Wheel:** Visually appealing, animated spin wheel rendered on canvas.
-- ➕ **Custom Options:** Add, remove, and edit up to 16 options dynamically.
-- ⚖️ **Weighted Probabilities:** Assign custom weights to each option for probability-based outcomes.
-- 🖱️ **Responsive UI:** Works seamlessly on desktop and mobile devices.
-- 🏆 **Result Modal:** Displays the winning option in a stylish modal popup.
-- 🧑‍💻 **No Dependencies:** Pure HTML, CSS, and JS (Tailwind via CDN).
+- **Interactive High-DPI Wheel:** Razor-sharp Retina canvas wheel with radial depth shading, 3D concentric metallic hub, and dual-tone outer bezel.
+- **Visible Striker Pegs & Ticker SFX:** Physical 3D metallic chrome studs at every slice boundary that visibly strike against the needle with mechanical tick audio.
+- **Sound Control & Victory Fanfare:** Built-in mute/unmute toggle (persisted in `localStorage`) and a synthesized 4-note celebratory arpeggio chime on win.
+- **Fullscreen Confetti Burst:** Zero-dependency canvas confetti shower celebrating every win.
+- **Winning Slice Highlight:** Flashes a glowing highlight pulse over the winning segment upon landing.
+- **Custom Options & Weights:** Add, remove, edit, and assign custom weights to up to 16 options dynamically with color-coded segment indicators.
+- **Quick Utilities:** One-click option shuffle to randomize slice order and one-click reset to defaults.
+- **Clean SVG Iconography:** Pure inline SVG icons throughout the interface with zero emoji dependencies.
+- **Responsive & Accessible:** Works seamlessly on desktop and mobile devices with keyboard shortcuts (`Enter`, `Escape`) and focus management.
+- **Zero Dependencies:** Pure HTML5, CSS3, and vanilla JavaScript (Tailwind via CDN).
 
 ## Demo
 
@@ -33,19 +37,19 @@ Just open `index.html` in your favorite browser. No build step required.
 ## Usage
 
 1. **Add Options:**  
-   Enter a label in the input and click "Add Option". Repeat for up to 16 options.
+   Enter an option name in the input and click "Add" (or press Enter). Up to 16 options are supported.
 
-2. **Edit Probabilities:**  
-   Click the percentage next to an option to set its weight (higher weight = higher chance).
+2. **Edit Options & Weights:**  
+   Click the pencil icon next to an option to edit its label and custom weight in place, then click the checkmark (or press Enter) to save.
 
 3. **Remove Options:**  
-   Click the trash icon next to an option to remove it.
+   Click the trash icon next to an option to remove it from the wheel.
 
 4. **Spin the Wheel:**  
-   Click the "SPIN!" button. The wheel will animate and land on a randomly selected option, weighted by your settings.
+   Click "SPIN THE WHEEL!". The wheel animates smoothly and stops on the winning option based on your weighted probabilities.
 
 5. **View Result:**  
-   The winning option is shown in a modal. Click "Awesome!" to close.
+   The winning option is highlighted in a celebratory popup modal. Click "Awesome!" or press Escape to dismiss.
 
 ## Customization
 
